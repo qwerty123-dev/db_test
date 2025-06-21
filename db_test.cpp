@@ -6,7 +6,6 @@
 using ::testing::Return;
 using ::testing::_;
 
-// Интерфейс подключения к БД
 class IDBConnection {
 public:
     virtual ~IDBConnection() = default;
@@ -15,7 +14,6 @@ public:
     virtual std::string execQuery(const std::string& query) = 0;
 };
 
-// Мок-реализация интерфейса с использованием GMock
 class MockDBConnection : public IDBConnection {
 public:
     MOCK_METHOD(bool, open, (), (override));
@@ -23,7 +21,6 @@ public:
     MOCK_METHOD(std::string, execQuery, (const std::string& query), (override));
 };
 
-// Класс, использующий подключение к базе данных
 class ClassThatUsesDB {
 public:
     explicit ClassThatUsesDB(std::shared_ptr<IDBConnection> dbConn)
@@ -46,7 +43,6 @@ private:
     std::shared_ptr<IDBConnection> dbConnection;
 };
 
-// Тесты с использованием GTest и GMock
 TEST(ClassThatUsesDBTest, OpenConnection_Success) {
     auto mockDb = std::make_shared<MockDBConnection>();
     EXPECT_CALL(*mockDb, open()).WillOnce(Return(true));
@@ -94,7 +90,6 @@ TEST(ClassThatUsesDBTest, UseConnection_EmptyQuery) {
     EXPECT_EQ(testObj.useConnection(query), expectedResult);
 }
 
-// Точка входа для запуска всех тестов
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
